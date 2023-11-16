@@ -27,37 +27,22 @@ def get_shop_list_by_dishes(dishes, person_count):
                 dish[x['ingredient_name']]['quantity'] += x['quantity'] * person_count
 
     return dish
-def writing_file(first_file, second_file, third_file, result_file):
-    with open(first_file, "r", encoding="utf-8") as f:
-        first_string = f.read()
-        first_list = first_string.split("\n")
-        name_first_file = os.path.basename(first_file)
-        number_first_file = str(len(first_list))
-    with open(second_file, "r", encoding="utf-8") as f:
-        second_string = f.read()
-        second_list = second_string.split("\n")
-        name_second_file = os.path.basename(second_file)
-        number_second_file = str(len(second_list))
-    with open(third_file, "r", encoding="utf-8") as f:
-        third_string = f.read()
-        third_list = third_string.split("\n")
-        name_third_file = os.path.basename(third_file)
-        number_third_file = str(len(third_list))
-    with open(result_file, "w", encoding="utf-8") as f:
-        f.write(name_second_file)
-        f.write("\n")
-        f.write(number_second_file)
-        f.write("\n")
-        f.write(second_string)
-        f.write("\n")
-        f.write(name_first_file)
-        f.write("\n")
-        f.write(number_first_file)
-        f.write("\n")
-        f.write(first_string)
-        f.write("\n")
-        f.write(name_third_file)
-        f.write("\n")
-        f.write(number_third_file)
-        f.write("\n")
-        f.write(third_string)
+def rewrite(full_path, file_for_write):
+    path = []
+    files_for_writing = {}
+    for name in list(os.listdir(full_path)):
+        if name.endswith('.txt'):
+            path.append(os.path.join(full_path, name))
+    for file in path:
+        with open(file, 'r', encoding='utf-8') as f:
+            data = f.read()
+            files_for_writing.update({os.path.basename(file): [str(len(data.split('\n'))), data]})
+    files = dict(sorted(files_for_writing.items(), key=lambda x: x[1][0]))
+    for write, file in files.items():
+        with open(file_for_write, 'a', encoding='utf-8') as f:
+            f.write(write)
+            f.write('\n')
+            f.write(file[0])
+            f.write('\n')
+            f.write(file[1])
+            f.write('\n')
